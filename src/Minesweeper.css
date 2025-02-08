@@ -1,44 +1,62 @@
+.minesweeper-screen {
+  background-image: url(https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/146464531/original/8c5628fb166d24655c9c1b87ef1d403c2a7f8f24/create-vector-2d-game-background-for-your-game.png);
+  background-repeat: none;
+  background-size: cover;
+}
+
 .minesweeper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: Arial, sans-serif;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  justify-content: center;
+  height: screen;
+
+}
+
+.board {
+  border: 2px solid #333;
+  background: #1717173e;
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  width: 60px;
+  height: 60px;
+  border: 2px solid #906a01;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  cursor: pointer;
+  background: #f5f2f2;
   
-  .board {
-    border: 2px solid #333;
-    background: #ccc;
-  }
+}
+
+.cell.revealed {
+  background: transparent;
   
-  .row {
-    display: flex;
-  }
-  
-  .cell {
-    width: 30px;
-    height: 30px;
-    border: 1px solid #999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    cursor: pointer;
-    background: #ccc;
-  }
-  
-  .cell.revealed {
-    background: #fff;
-  }
-  
-  .status {
-    margin-top: 20px;
-    font-size: 24px;
-    text-align: center;
-  }
-  
-  button {
-    margin-top: 10px;
-    padding: 8px 16px;
-    font-size: 16px;
-    cursor: pointer;
-  }
+}
+
+.status {
+  margin-top: 20px;
+  font-size: 24px;
+  text-align: center;
+}
+
+button {
+  /* margin-top: 10px; */
+  padding: 8px 16px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #fffbfb;
+  cursor: pointer;
+}

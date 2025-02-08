@@ -5,7 +5,7 @@ const BOARD_SIZE = 10;
 const NUMBER_OF_MINES = 10;
 
 const createBoard = () => {
-  const board = Array(BOARD_SIZE).fill().map(() => 
+  const board = Array(BOARD_SIZE).fill().map(() =>
     Array(BOARD_SIZE).fill().map(() => ({
       isMine: false,
       isRevealed: false,
@@ -63,7 +63,7 @@ const Mines = () => {
       return;
 
     }
-    
+
     const newBoard = [...board];
     if (newBoard[x][y].isMine) {
       // Game Over
@@ -73,27 +73,27 @@ const Mines = () => {
       return;
     }
 
-    const floodReveal = (x, y) => {
+    const emptyCellReveal = (x, y) => {
       if (x < 0 || x >= BOARD_SIZE || y < 0 || y >= BOARD_SIZE || newBoard[x][y].isRevealed || newBoard[x][y].isFlagged) {
-            return
-          }
+        return
+      }
 
       newBoard[x][y].isRevealed = true;
 
       if (newBoard[x][y].neighborMines === 0) {
         for (let dx = -1; dx <= 1; dx++) {
           for (let dy = -1; dy <= 1; dy++) {
-            floodReveal(x + dx, y + dy);
+            emptyCellReveal(x + dx, y + dy);
           }
         }
       }
     };
 
-    floodReveal(x, y);
+    emptyCellReveal(x, y);
     setBoard(newBoard);
 
     // Check win condition
-    const won = board.flat().every(cell => 
+    const won = board.flat().every(cell =>
       cell.isRevealed || (cell.isMine && !cell.isRevealed)
     );
     if (won) {
@@ -104,47 +104,57 @@ const Mines = () => {
 
   const handleRightClick = (e, x, y) => {
     e.preventDefault();
-    if (gameOver || board[x][y].isRevealed){
+    if (gameOver || board[x][y].isRevealed) {
       return
     }
-    
+
     const newBoard = [...board];
     newBoard[x][y].isFlagged = !newBoard[x][y].isFlagged;
     setBoard(newBoard);
   };
 
   return (
-    <div className="minesweeper">
-      <div className="board">
-        {board.map((row, x) => (
-          <div key={x} className="row">
-            {row.map((cell, y) => (
-              <button
-                key={`${x}-${y}`}
-                className={`cell ${cell.isRevealed ? 'revealed' : ''}`}
-                onClick={() => revealCell(x, y)}
-                onContextMenu={(e) => handleRightClick(e, x, y)}
-              >
-                {cell.isRevealed ? (
-                  cell.isMine ? '💣' : cell.neighborMines || ''
-                ) : (
-                  cell.isFlagged ? '🚩' : ''
-                )}
-              </button>
+    <>
+      <div className="h-screen minesweeper-screen justify-center items-center flex ">
+
+        <div className="minesweeper w-screen gap-5">
+
+          <div className='text-4xl font-bold'>
+            MineSweeper
+          </div>
+
+          <div className="board">
+            {board.map((row, x) => (
+              <div key={x} className="row">
+                {row.map((cell, y) => (
+                  <button
+                    key={`${x}-${y}`}
+                    className={`cell ${cell.isRevealed ? 'revealed' : ''}`}
+                    onClick={() => revealCell(x, y)}
+                    onContextMenu={(e) => handleRightClick(e, x, y)}
+                  >
+                    {cell.isRevealed ? (
+                      cell.isMine ? '💣' : cell.neighborMines || ''
+                    ) : (
+                      cell.isFlagged ? '🚩' : ''
+                    )}
+                  </button>
+                ))}
+              </div>
             ))}
           </div>
-        ))}
-      </div>
-      
-      <div className="status">
-        {gameOver && (
-          <div>
-            {winner ? 'You Win! 🎉' : 'Game Over! 💥'}
-            <button onClick={resetGame}>Play Again</button>
+
+          <div className="status">
+            {gameOver && (
+              <div>
+                {winner ? 'You Win! 🎉' : 'Game Over! 💥'}
+                <button onClick={resetGame}>Play Again</button>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
