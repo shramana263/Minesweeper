@@ -30,13 +30,11 @@ const createBoard = () => {
     for (let y = 0; y < BOARD_SIZE; y++) {
       if (!board[x][y].isMine) {
         let count = 0;
-        for (let dx = -1; dx <= 1; dx++) {
-          for (let dy = -1; dy <= 1; dy++) {
-            const newX = x + dx;
-            const newY = y + dy;
-            if (newX >= 0 && newX < BOARD_SIZE && 
-                newY >= 0 && newY < BOARD_SIZE && 
-                board[newX][newY].isMine) {
+        for (let i = -1; i <= 1; i++) {
+          for (let j = -1; j <= 1; j++) {
+            const newX = x + i;
+            const newY = y + j;
+            if (newX >= 0 && newX < BOARD_SIZE && newY >= 0 && newY < BOARD_SIZE && board[newX][newY].isMine) {
               count++;
             }
           }
@@ -61,7 +59,10 @@ const Mines = () => {
   };
 
   const revealCell = (x, y) => {
-    if (gameOver || board[x][y].isRevealed || board[x][y].isFlagged) return;
+    if (gameOver || board[x][y].isRevealed || board[x][y].isFlagged) {
+      return;
+
+    }
     
     const newBoard = [...board];
     if (newBoard[x][y].isMine) {
@@ -73,8 +74,9 @@ const Mines = () => {
     }
 
     const floodReveal = (x, y) => {
-      if (x < 0 || x >= BOARD_SIZE || y < 0 || y >= BOARD_SIZE ||
-          newBoard[x][y].isRevealed || newBoard[x][y].isFlagged) return;
+      if (x < 0 || x >= BOARD_SIZE || y < 0 || y >= BOARD_SIZE || newBoard[x][y].isRevealed || newBoard[x][y].isFlagged) {
+            return
+          }
 
       newBoard[x][y].isRevealed = true;
 
@@ -102,7 +104,9 @@ const Mines = () => {
 
   const handleRightClick = (e, x, y) => {
     e.preventDefault();
-    if (gameOver || board[x][y].isRevealed) return;
+    if (gameOver || board[x][y].isRevealed){
+      return
+    }
     
     const newBoard = [...board];
     newBoard[x][y].isFlagged = !newBoard[x][y].isFlagged;
