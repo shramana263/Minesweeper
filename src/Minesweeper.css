@@ -2,6 +2,11 @@
   background-image: url(https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/146464531/original/8c5628fb166d24655c9c1b87ef1d403c2a7f8f24/create-vector-2d-game-background-for-your-game.png);
   background-repeat: none;
   background-size: cover;
+  
+}
+
+.screen-height{
+  height: calc(100vh - 60px );
 }
 
 .minesweeper {
@@ -10,14 +15,13 @@
   align-items: center;
   font-family: Arial, sans-serif;
   justify-content: center;
-  height: screen;
-
+  height:inherit;
 }
 
 .board {
   border: 2px solid #333;
   background: #1717173e;
-  height: inherit;
+  /* height: ; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -48,7 +52,7 @@
 }
 
 .status {
-  margin-top: 20px;
+  /* margin-top: 20px; */
   font-size: 24px;
   text-align: center;
 }

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import './Minesweeper.css';
 import GameOver from './components/GameOver';
+import Navbar from './components/Navbar';
+import { useStopwatch } from 'react-timer-hook';
 
 const BOARD_SIZE = 10;
 const NUMBER_OF_MINES = 10;
@@ -23,6 +25,18 @@ const Mines = () => {
   const [winMsg, setWinMsg] = useState(0);
   const [isFirstClick, setIsFirstClick] = useState(true);
 
+  const {
+    totalSeconds,
+    seconds,
+    minutes,
+    hours,
+    days,
+    isRunning,
+    start,
+    pause,
+    reset,
+  } = useStopwatch({ autoStart: false });
+
   const resetGame = () => {
     setBoard(createEmptyBoard());
     setGameOver(false);
@@ -36,6 +50,7 @@ const Mines = () => {
     }
 
     if (isFirstClick) {
+      start();
       setIsFirstClick(false);
       const newBoard = [...board];
       const safeCells = [];
@@ -114,7 +129,7 @@ const Mines = () => {
       }
       newBoard[x][y].isRevealed = true;
       if (newBoard[x][y].neighborMines === 0) {
-        for(let dx = -1; dx <= 1; dx++) {
+        for (let dx = -1; dx <= 1; dx++) {
           for (let dy = -1; dy <= 1; dy++) {
             emptyCellReveal(x + dx, y + dy);
           }
@@ -153,11 +168,10 @@ const Mines = () => {
 
   return (
     <>
-      <div className="h-screen minesweeper-screen justify-center items-center flex ">
-        <div className="minesweeper w-screen gap-5">
-          <div className='text-4xl font-bold'>
-            MineSweeper
-          </div>
+      <Navbar mines={NUMBER_OF_MINES} days={days} hours={hours} minutes={minutes} seconds={seconds} />
+      <div className='screen-height minesweeper-screen flex justify-center items-center'>
+        {/* <div className=" justify-center items-center flex"> */}
+        <div className="minesweeper screen-height w-screen gap-5 ">
           <div className="board">
             {board.map((row, x) => (
               <div key={x} className="row">
@@ -186,6 +200,7 @@ const Mines = () => {
             )}
           </div>
         </div>
+        {/* </div> */}
       </div>
     </>
   );
