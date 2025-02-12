@@ -5,8 +5,8 @@ import GameOver from './components/GameOver';
 const BOARD_SIZE = 10;
 const NUMBER_OF_MINES = 10;
 
-const createBoard = () => {
-  const board = Array(BOARD_SIZE).fill().map(() =>
+const createEmptyBoard = () => {
+  return Array(BOARD_SIZE).fill().map(() =>
     Array(BOARD_SIZE).fill().map(() => ({
       isMine: false,
       isRevealed: false,
@@ -14,61 +14,94 @@ const createBoard = () => {
       neighborMines: 0,
     }))
   );
-
-  // Place mines
-  let minesPlaced = 0;
-  while (minesPlaced < NUMBER_OF_MINES) {
-    const x = Math.floor(Math.random() * BOARD_SIZE);
-    const y = Math.floor(Math.random() * BOARD_SIZE);
-    if (!board[x][y].isMine) {
-      board[x][y].isMine = true;
-      minesPlaced++;
-    }
-  }
-
-  // Calculate neighbor mines
-  for (let x = 0; x < BOARD_SIZE; x++) {
-    for (let y = 0; y < BOARD_SIZE; y++) {
-      if (!board[x][y].isMine) {
-        let count = 0;
-        for (let i = -1; i <= 1; i++) {
-          for (let j = -1; j <= 1; j++) {
-            const newX = x + i;
-            const newY = y + j;
-            if (newX >= 0 && newX < BOARD_SIZE && newY >= 0 && newY < BOARD_SIZE && board[newX][newY].isMine) {
-              count++;
-            }
-          }
-        }
-        board[x][y].neighborMines = count;
-      }
-    }
-  }
-
-  return board;
 };
 
 const Mines = () => {
-  const [board, setBoard] = useState(createBoard());
+  const [board, setBoard] = useState(createEmptyBoard());
   const [gameOver, setGameOver] = useState(false);
   const [winner, setWinner] = useState(false);
   const [winMsg, setWinMsg] = useState(0);
+  const [isFirstClick, setIsFirstClick] = useState(true);
 
   const resetGame = () => {
-    setBoard(createBoard());
+    setBoard(createEmptyBoard());
     setGameOver(false);
     setWinner(false);
+    setIsFirstClick(true);
   };
 
   const revealCell = (x, y) => {
     if (gameOver || board[x][y].isRevealed || board[x][y].isFlagged) {
       return;
+    }
 
+    if (isFirstClick) {
+      setIsFirstClick(false);
+      const newBoard = [...board];
+      const safeCells = [];
+      for (let i = 0; i < BOARD_SIZE; i++) {
+        for (let j = 0; j < BOARD_SIZE; j++) {
+          if (Math.abs(i - x) > 1 || Math.abs(j - y) > 1) {
+            safeCells.push({ x: i, y: j });
+          }
+        }
+      }
+
+      let minesPlaced = 0;
+      while (minesPlaced < NUMBER_OF_MINES) {
+        if (safeCells.length === 0) {
+          break;
+        }
+        const randomIndex = Math.floor(Math.random() * safeCells.length);
+        const cell = safeCells[randomIndex];
+        if (!newBoard[cell.x][cell.y].isMine) {
+          newBoard[cell.x][cell.y].isMine = true;
+          minesPlaced++;
+          safeCells.splice(randomIndex, 1);
+        }
+      }
+
+      for (let i = 0; i < BOARD_SIZE; i++) {
+        for (let j = 0; j < BOARD_SIZE; j++) {
+          if (!newBoard[i][j].isMine) {
+            let count = 0;
+            for (let dx = -1; dx <= 1; dx++) {
+              for (let dy = -1; dy <= 1; dy++) {
+                const ni = i + dx;
+                const nj = j + dy;
+                if (ni >= 0 && ni < BOARD_SIZE && nj >= 0 && nj < BOARD_SIZE) {
+                  if (newBoard[ni][nj].isMine) {
+                    count++;
+                  }
+                }
+              }
+            }
+            newBoard[i][j].neighborMines = count;
+          }
+        }
+      }
+
+      const emptyCellReveal = (x, y) => {
+        if (x < 0 || x >= BOARD_SIZE || y < 0 || y >= BOARD_SIZE || newBoard[x][y].isRevealed || newBoard[x][y].isFlagged) {
+          return;
+        }
+        newBoard[x][y].isRevealed = true;
+        if (newBoard[x][y].neighborMines === 0) {
+          for (let dx = -1; dx <= 1; dx++) {
+            for (let dy = -1; dy <= 1; dy++) {
+              emptyCellReveal(x + dx, y + dy);
+            }
+          }
+        }
+      };
+
+      emptyCellReveal(x, y);
+      setBoard(newBoard);
+      return;
     }
 
     const newBoard = [...board];
     if (newBoard[x][y].isMine) {
-      // Game Over
       newBoard[x][y].isRevealed = true;
       setBoard(newBoard);
       setGameOver(true);
@@ -77,13 +110,11 @@ const Mines = () => {
 
     const emptyCellReveal = (x, y) => {
       if (x < 0 || x >= BOARD_SIZE || y < 0 || y >= BOARD_SIZE || newBoard[x][y].isRevealed || newBoard[x][y].isFlagged) {
-        return
+        return;
       }
-
       newBoard[x][y].isRevealed = true;
-
       if (newBoard[x][y].neighborMines === 0) {
-        for (let dx = -1; dx <= 1; dx++) {
+        for(let dx = -1; dx <= 1; dx++) {
           for (let dy = -1; dy <= 1; dy++) {
             emptyCellReveal(x + dx, y + dy);
           }
@@ -94,8 +125,7 @@ const Mines = () => {
     emptyCellReveal(x, y);
     setBoard(newBoard);
 
-    // Check win condition
-    const won = board.flat().every(cell =>
+    const won = newBoard.flat().every(cell =>
       cell.isRevealed || (cell.isMine && !cell.isRevealed)
     );
     if (won) {
@@ -107,29 +137,27 @@ const Mines = () => {
   const handleRightClick = (e, x, y) => {
     e.preventDefault();
     if (gameOver || board[x][y].isRevealed) {
-      return
+      return;
     }
 
     const newBoard = [...board];
     newBoard[x][y].isFlagged = !newBoard[x][y].isFlagged;
     setBoard(newBoard);
   };
+
   useEffect(() => {
     if (gameOver) {
-      setWinMsg(prev => winner ? 1:0);
+      setWinMsg(prev => winner ? 1 : 0);
     }
   }, [gameOver, winner]);
 
   return (
     <>
       <div className="h-screen minesweeper-screen justify-center items-center flex ">
-
         <div className="minesweeper w-screen gap-5">
-
           <div className='text-4xl font-bold'>
             MineSweeper
           </div>
-
           <div className="board">
             {board.map((row, x) => (
               <div key={x} className="row">
@@ -150,18 +178,10 @@ const Mines = () => {
               </div>
             ))}
           </div>
-
           <div className="status">
             {gameOver && (
               <div>
-                {/* {winner ? 'You Win! 🎉' : 'Game Over! 💥'} */}
-
-                {/* {winner?setWinMsg('You Win! 🎉'):setWinMsg('Game Over! 💥')} */}
-                {/* <button onClick={resetGame}>Play Again</button> */}
-                {
-                  winMsg!=null &&
-                  <GameOver resetGame={resetGame} winMsg={winMsg} />
-                }
+                {winMsg !== null && <GameOver resetGame={resetGame} winMsg={winMsg} />}
               </div>
             )}
           </div>
