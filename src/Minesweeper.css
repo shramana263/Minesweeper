@@ -31,19 +31,20 @@
 .cell {
   width: 60px;
   height: 60px;
-  border: 2px solid #906a01;
+  border: 2px solid #392a01;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
   cursor: pointer;
-  background: #f5f2f2;
+  background: #535353;
+  box-shadow:inset 6px 6px 12px 3px #656565;
   
 }
 
 .cell.revealed {
   background: transparent;
-  
+  box-shadow: none;
 }
 
 .status {
@@ -55,8 +56,10 @@
 button {
   /* margin-top: 10px; */
   padding: 8px 16px;
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 28px;
+  font-weight: bolder;
   color: #fffbfb;
   cursor: pointer;
+  -webkit-text-stroke: 0.5px black;
+  text-shadow: 2px 2px 6px #2b2b2b;
 }

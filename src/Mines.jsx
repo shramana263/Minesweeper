@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './Minesweeper.css';
+import GameOver from './components/GameOver';
 
 const BOARD_SIZE = 10;
 const NUMBER_OF_MINES = 10;
@@ -51,6 +52,7 @@ const Mines = () => {
   const [board, setBoard] = useState(createBoard());
   const [gameOver, setGameOver] = useState(false);
   const [winner, setWinner] = useState(false);
+  const [winMsg, setWinMsg] = useState(0);
 
   const resetGame = () => {
     setBoard(createBoard());
@@ -112,6 +114,11 @@ const Mines = () => {
     newBoard[x][y].isFlagged = !newBoard[x][y].isFlagged;
     setBoard(newBoard);
   };
+  useEffect(() => {
+    if (gameOver) {
+      setWinMsg(prev => winner ? 1:0);
+    }
+  }, [gameOver, winner]);
 
   return (
     <>
@@ -147,8 +154,14 @@ const Mines = () => {
           <div className="status">
             {gameOver && (
               <div>
-                {winner ? 'You Win! 🎉' : 'Game Over! 💥'}
-                <button onClick={resetGame}>Play Again</button>
+                {/* {winner ? 'You Win! 🎉' : 'Game Over! 💥'} */}
+
+                {/* {winner?setWinMsg('You Win! 🎉'):setWinMsg('Game Over! 💥')} */}
+                {/* <button onClick={resetGame}>Play Again</button> */}
+                {
+                  winMsg!=null &&
+                  <GameOver resetGame={resetGame} winMsg={winMsg} />
+                }
               </div>
             )}
           </div>
