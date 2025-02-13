@@ -24,6 +24,7 @@ const Mines = () => {
   const [winner, setWinner] = useState(false);
   const [winMsg, setWinMsg] = useState(0);
   const [isFirstClick, setIsFirstClick] = useState(true);
+  const [flags,setFlags]= useState(NUMBER_OF_MINES)
 
   const {
     totalSeconds,
@@ -154,10 +155,14 @@ const Mines = () => {
     if (gameOver || board[x][y].isRevealed) {
       return;
     }
-
+    if(flags==0){
+        return;
+    }
     const newBoard = [...board];
     newBoard[x][y].isFlagged = !newBoard[x][y].isFlagged;
     setBoard(newBoard);
+    setFlags(prev=>prev-1);
+    
   };
 
   useEffect(() => {
@@ -168,7 +173,7 @@ const Mines = () => {
 
   return (
     <>
-      <Navbar mines={NUMBER_OF_MINES} days={days} hours={hours} minutes={minutes} seconds={seconds} />
+      <Navbar mines={flags} days={days} hours={hours} minutes={minutes} seconds={seconds} />
       <div className='screen-height minesweeper-screen flex justify-center items-center'>
         {/* <div className=" justify-center items-center flex"> */}
         <div className="minesweeper screen-height w-screen gap-5 ">
