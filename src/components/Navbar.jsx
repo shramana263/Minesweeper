@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import LevelSelect from './LevelSelect'
 
 const Navbar = ({ mines, days, hours, minutes, seconds }) => {
     const [level, setLevel] = useState('Beginner');
