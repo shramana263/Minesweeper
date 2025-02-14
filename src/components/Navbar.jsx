@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import { useLevel } from '../contexts/LevelContext';
 
 const Navbar = ({ mines, days, hours, minutes, seconds }) => {
-    const [level, setLevel] = useState('Beginner');
+    const {level, setLevel} = useLevel()
 
-    const handleChange = (event) => {
-      setLevel(event.target.value);
+    const handleChange = (e) => {
+        const LEVEL= e.target.value;
+        setLevel(prev=>LEVEL);
     };
 
     return (
