@@ -8,6 +8,8 @@ import explode from '/audio/explosion.wav';
 import lose from '/audio/lose.wav';
 import win from '/audio/win.wav';
 import { useLevel } from './contexts/LevelContext';
+import MinesweeperInstructionsModal from './components/MinesweeperInstructionsModal';
+import { GoInfo } from 'react-icons/go';
 
 const Mines = () => {
   const { level, setLevel, boardSize, createEmptyBoard, board, setBoard, numberofMines, setNumberofMines } = useLevel();
@@ -15,7 +17,7 @@ const Mines = () => {
   // const numberofMines = 10;
 
 
-
+  const [showInstructions, setShowInstructions] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [winner, setWinner] = useState(false);
   const [winMsg, setWinMsg] = useState(0);
@@ -25,7 +27,7 @@ const Mines = () => {
   const winRef = useRef();
   const loseRef = useRef();
   const explodeRef = useRef();
-  const windowFocused= useRef(true);
+  const windowFocused = useRef(true);
 
 
   const {
@@ -52,7 +54,7 @@ const Mines = () => {
 
   const revealCell = (x, y) => {
 
-    if(!isRunning){
+    if (!isRunning) {
       start();
     }
 
@@ -244,6 +246,18 @@ const Mines = () => {
       <div className='screen-height minesweeper-screen flex justify-center items-center'>
         {/* <div className=" justify-center items-center flex"> */}
         <div className="minesweeper screen-height w-screen gap-5 ">
+
+
+          <button
+            onClick={() => setShowInstructions(true)}
+            className="bg-gray-800 hover:bg-gray-900 absolute bottom-5 right-5 text-white px-4 py-4 rounded-full transition-colors flex justify-self-end"
+          >
+            <GoInfo />
+          </button>
+
+
+
+
           <div className="board">
             {board.map((row, x) => (
               <div key={x} className="row">
@@ -290,7 +304,7 @@ const Mines = () => {
                 PLAY
               </div>
             }
-            
+
           </div>
           <div className="status">
             {gameOver && (
@@ -299,6 +313,12 @@ const Mines = () => {
               </div>
             )}
           </div>
+
+          <MinesweeperInstructionsModal
+            isOpen={showInstructions}
+            onClose={() => setShowInstructions(false)}
+          />
+
         </div>
         {/* </div> */}
       </div>
