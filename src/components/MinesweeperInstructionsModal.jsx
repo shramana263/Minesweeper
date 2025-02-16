@@ -5,7 +5,7 @@ const MinesweeperInstructionsModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-neutral-50 rounded-lg p-6 max-w-xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-gray-800">Minesweeper Rules</h2>
           <button
@@ -66,7 +66,7 @@ const MinesweeperInstructionsModal = ({ isOpen, onClose }) => {
 
         <button
           onClick={onClose}
-          className="mt-6 w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition-colors"
+          className="mt-6 w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded transition-colors"
         >
           Start Sweeping!
         </button>
