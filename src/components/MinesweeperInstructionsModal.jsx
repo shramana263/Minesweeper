@@ -39,7 +39,7 @@ const MinesweeperInstructionsModal = ({ isOpen, onClose }) => {
             <ul className="list-disc list-inside space-y-2">
               <li>Left Click: Reveal cell</li>
               <li>Right Click: Flag potential mine</li>
-              <li>Double Click (on numbers): Clear surrounding cells</li>
+              {/* <li>Double Click (on numbers): Clear surrounding cells</li> */}
             </ul>
           </div>
 
