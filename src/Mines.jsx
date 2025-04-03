@@ -264,7 +264,7 @@ const Mines = () => {
                 {row.map((cell, y) => (
                   <button
                     key={`${x}-${y}`}
-                    className={`cell ${level == 'Beginner' ? 'h-[60px] w-[60px]' : (level == 'Intermediate' ? 'h-[40px] w-[40px]' : 'h-[35px] w-[34px]')} ${cell.isRevealed ? 'revealed' : ''}`}
+                    className={`cell ${level == 'Beginner' ? 'h-[50px] w-[50px]' : (level == 'Intermediate' ? 'h-[30px] w-[30px]' : 'h-[28px] w-[18px]')} ${cell.isRevealed ? 'revealed' : ''}`}
                     onClick={() => revealCell(x, y)}
                     onContextMenu={(e) => handleRightClick(e, x, y)}
                   >
